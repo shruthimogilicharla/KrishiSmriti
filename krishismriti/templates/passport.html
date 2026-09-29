@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plot Passport · {{ p.id }}</title>
+<link rel="icon" href="/static/icon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body{font-family:"Noto Sans",system-ui,sans-serif;background:#e9e6dc;color:#1d211e;margin:0;font-size:13px}
+.page{max-width:820px;margin:24px auto;background:#fff;padding:36px 40px;box-shadow:0 4px 20px rgba(0,0,0,.12)}
+.hd{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #1f6b3a;padding-bottom:14px;gap:20px}
+.hd h1{margin:0;font-size:22px;color:#1f6b3a}.hd .sub{color:#646b66}
+.qr svg{width:110px;height:110px}.qr{text-align:center;font-size:10px;color:#646b66}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 24px;margin:18px 0}
+.grid div span{display:block;color:#646b66;font-size:11px;text-transform:uppercase;letter-spacing:.04em}.grid div b{font-size:14px}
+h2{font-size:14px;margin:22px 0 8px;color:#1f6b3a;text-transform:uppercase;letter-spacing:.06em}
+table{width:100%;border-collapse:collapse}td:first-child{white-space:nowrap}th,td{text-align:left;padding:6px 6px;border-bottom:1px solid #e4e0d4;vertical-align:top}
+th{font-size:11px;color:#646b66;text-transform:uppercase}td.n{text-align:right}
+.no{color:#b3261e;font-weight:600}.ok{color:#1f6b3a;font-weight:600}.pend{color:#8a5a00}
+.box{border:1px solid #e4e0d4;border-radius:8px;padding:10px 12px}
+.foot{margin-top:24px;color:#646b66;font-size:11px;border-top:1px solid #e4e0d4;padding-top:10px}
+.print{position:fixed;right:20px;bottom:20px;background:#1f6b3a;color:#fff;border:none;border-radius:12px;padding:12px 18px;font:inherit;font-weight:600;cursor:pointer}
+@media print{body{background:#fff}.page{box-shadow:none;margin:0;max-width:none}.print{display:none}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="hd">
+    <div>
+      <h1>🌾 Plot Passport</h1>
+      <div class="sub">KrishiSmriti farm record · generated {{ today }}</div>
+      <div style="font-size:20px;font-weight:700;margin-top:10px">{{ p.farmer }} · {{ p.id }}</div>
+    </div>
+    {% if qr %}<div class="qr">{{ qr|safe }}<div>Scan to verify</div></div>{% endif %}
+  </div>
+
+  <div class="grid">
+    <div><span>Village</span><b>{{ p.village }}</b></div>
+    <div><span>District / State</span><b>{{ p.district }}, {{ p.state }}</b></div>
+    <div><span>Area</span><b>{{ p.area_acres }} acres</b></div>
+    <div><span>Current crop</span><b>{{ p.crop }}</b></div>
+    <div><span>Sown</span><b>{{ p.sown or "-" }}</b></div>
+    <div><span>Stage</span><b>{% if stage %}{{ stage.stage }} (day {{ stage.das }}){% else %}-{% endif %}</b></div>
+    <div><span>Records</span><b>{{ events|length }}</b></div>
+    <div><span>Input spend on record</span><b>₹{{ "{:,}".format(spent) }}</b></div>
+    <div><span>Member since</span><b>{{ p.joined or "-" }}</b></div>
+  </div>
+
+  <h2>Do not use on this plot</h2>
+  <div class="box">
+    {% for a in guard.avoid %}<div class="no">⛔ {{ a.product }} · failed {{ a.count }}× · {{ a.moa or "" }} · last {{ a.dates[-1] }}</div>{% else %}<div>No failed treatments recorded.</div>{% endfor %}
+    {% if guard.avoid_same_moa %}<div style="margin-top:6px;color:#646b66">Same chemical group, also not advised: {{ guard.avoid_same_moa|join(", ") }}</div>{% endif %}
+  </div>
+
+  <h2>Proven on this plot</h2>
+  <div class="box">
+    {% for a in guard.proven %}<div class="ok">✅ {{ a.product }} · {{ a.best_days }} healthy days · {{ a.moa or "" }}</div>{% else %}<div>None recorded yet.</div>{% endfor %}
+  </div>
+
+  <h2>Full input & outcome history</h2>
+  <table>
+    <tr><th>Date</th><th>Type</th><th>Product</th><th>Target</th><th>Group</th><th class="n">Cost</th><th>Outcome</th></tr>
+    {% for e in events %}
+    <tr><td>{{ e.date }}</td><td>{{ e.type|replace("_"," ") }}</td><td>{{ e.product or (e.notes or "")[:110] }}</td><td>{{ e.target or "" }}</td>
+      <td>{{ moa(e.product or "") or "" }}</td><td class="n">{% if e.cost %}₹{{ e.cost }}{% endif %}</td>
+      <td class="{{ 'no' if e.outcome=='failed' else 'ok' if e.outcome=='worked' else 'pend' }}">{{ e.outcome or "" }}{% if e.days_healthy %} ({{ e.days_healthy }}d){% endif %}</td></tr>
+    {% endfor %}
+  </table>
+
+  <div class="foot">
+    This record was built from the farmer's own voice notes, bill scans and 7-day follow-ups in KrishiSmriti. It can support crop insurance (PMFBY) claims,
+    Kisan Credit Card applications, input dealers checking what not to sell, and buyers asking for spray history. Farmer-owned data, shared with the farmer's consent.
+  </div>
+</div>
+<button class="print" onclick="window.print()">🖨️ Print / Save PDF</button>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/static/icon.svg">
+<title>KrishiSmriti · Field Desk</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#1f6b3a;--g-l:#e6f2e9;--ink:#1d211e;--mut:#646b66;--line:#e4e0d4;--bg:#f4f1e8;--card:#fff;--r:#b3261e;--r-l:#fcebea;--y:#8a5a00;--y-l:#fff3d6;--b:#1f5f99;--b-l:#e7f0fa;
+--h0:#f3f0e8;--h1:#f6c9c0;--h2:#e8897a;--h3:#c24634;--h4:#8c1d12;--sh:0 1px 2px rgba(30,40,30,.06),0 4px 14px rgba(30,40,30,.05)}
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+header{background:#173f25;color:#fff;padding:14px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+header img{width:30px;height:30px;border-radius:8px}header h1{font-size:18px;margin:0}header .sp{flex:1}
+header a{color:#cfe8d6;text-decoration:none;font-size:13px}
+main{max-width:1280px;margin:0 auto;padding:20px 24px 60px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:var(--card);border-radius:14px;padding:14px 16px;box-shadow:var(--sh)}
+.kpi .v{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums}.kpi .l{color:var(--mut);font-size:12px}
+.kpi.g .v{color:var(--g)}
+.cols{display:grid;grid-template-columns:3fr 2fr;gap:16px}@media(max-width:980px){.cols{grid-template-columns:1fr}}
+.card{background:var(--card);border-radius:16px;padding:16px 18px;box-shadow:var(--sh);margin-bottom:16px;overflow-x:auto}
+.card h2{font-size:15px;margin:0 0 4px;display:flex;align-items:center;gap:8px}.card .d{color:var(--mut);font-size:12px;margin-bottom:12px}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mut);font-weight:600;font-size:12px}td.n{text-align:right;font-variant-numeric:tabular-nums}
+.heat td.c{text-align:center;font-weight:600;border:2px solid #fff;border-radius:6px;min-width:70px;cursor:default}
+.legend{display:flex;gap:6px;align-items:center;font-size:11px;color:var(--mut);margin-top:10px}.legend i{width:22px;height:12px;border-radius:3px;display:inline-block}
+.pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;background:var(--g-l);color:var(--g);font-weight:600;margin:1px}
+.pill.r{background:var(--r-l);color:var(--r)}.pill.y{background:var(--y-l);color:var(--y)}.pill.b{background:var(--b-l);color:var(--b)}
+.esc{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px}.esc.open{border-left:4px solid var(--y)}.esc.answered{border-left:4px solid var(--g);opacity:.8}
+.esc textarea{width:100%;font:inherit;border:1.5px solid var(--line);border-radius:10px;padding:8px;margin-top:8px;min-height:60px}
+.btn{font:inherit;font-weight:600;border:none;border-radius:10px;padding:8px 14px;background:var(--g);color:#fff;cursor:pointer}.btn.ghost{background:#fff;color:var(--g);border:1.5px solid var(--g)}.btn.r{background:#fff;color:var(--r);border:1.5px solid var(--r)}
+.alert{background:var(--y-l);border-left:4px solid var(--y);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.muted{color:var(--mut);font-size:12px}
+a.pp{color:var(--g);font-weight:600;text-decoration:none}
+.tip{position:fixed;background:#1d211e;color:#fff;padding:6px 10px;border-radius:8px;font-size:12px;pointer-events:none;display:none;z-index:9}
+</style>
+</head>
+<body>
+<header><img src="/static/icon.svg" alt=""><h1>KrishiSmriti · Field Agent & KVK Desk</h1><span class="sp"></span>
+<span id="mode" class="muted" style="color:#cfe8d6"></span><a href="/" target="_blank">📱 Farmer app</a><a href="/docs" target="_blank">⚙️ API</a></header>
+<main>
+  <div class="kpis" id="kpis"></div>
+  <div class="cols">
+    <div>
+      <div class="card"><h2>🧪 Resistance map</h2><div class="d">Failed sprays by village and chemical group (IRAC/FRAC). A dark cell means pests there are likely resistant to that group, so don't sell or recommend anything from it.</div><div id="heat"></div></div>
+      <div class="card"><h2>👨‍🔬 Expert queue</h2><div class="d">Questions the AI was not confident about. Your answer is translated, sent to the farmer's home screen, and saved in the plot's memory.</div><div id="esc"></div></div>
+    </div>
+    <div>
+      <div class="card"><h2>⚠️ Outbreak alerts</h2><div class="d">Same pest reported on 2+ plots of a village in 14 days. Farmers in that village are alerted automatically.</div><div id="out"></div></div>
+      <div class="card"><h2>👴 Elder tips to verify</h2><div class="d">Traditional knowledge recorded by voice. Verified tips can be recommended; unverified ones are only shown as "not verified".</div><div id="eld"></div></div>
+    </div>
+  </div>
+  <div class="card"><h2>👩‍🌾 Farmers</h2><div class="d">Every registered plot. Click the passport for a printable record.</div><div id="farmers"></div></div>
+</main>
+<div class="tip" id="tip"></div>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const rs=n=>"₹"+Number(n||0).toLocaleString("en-IN");
+const shade=n=>n<=0?["var(--h0)","#9a968a"]:n===1?["var(--h1)","#5c1b12"]:n===2?["var(--h2)","#3b0d07"]:n===3?["var(--h3)","#fff"]:["var(--h4)","#fff"];
+async function load(){
+  const [d,st]=await Promise.all([fetch("/api/agent/overview").then(r=>r.json()),fetch("/api/status").then(r=>r.json())]);
+  $("mode").textContent=`memory: ${st.memory} · ai: ${st.llm}`;
+  const k=d.kpis;
+  $("kpis").innerHTML=[["Farmers",k.farmers,`${k.villages} villages`],["Farm records",k.records,`${k.voice_records} by voice`],["Saved by memory",rs(k.saved),"blocked repeat failures","g"],
+    ["Lost before KrishiSmriti",rs(k.wasted_before),"on sprays that failed"],["Outcomes recorded",k.followup_rate+"%","of sprays: worked or failed"],["Open expert cases",k.open_escalations,"waiting for KVK"]]
+    .map(([l,v,s,c])=>`<div class="kpi ${c||""}"><div class="l">${l}</div><div class="v">${v}</div><div class="muted">${s}</div></div>`).join("");
+  const H=d.heatmap;
+  $("heat").innerHTML=`<table class="heat"><tr><th>Village</th>${H.groups.map(g=>`<th style="text-align:center">${esc(g.replace(/ \(/,"\n("))}</th>`).join("")}</tr>`+
+    H.rows.map(r=>`<tr><td><b>${esc(r.village)}</b><div class="muted">${r.farmers} farmer${r.farmers===1?"":"s"}</div></td>${H.groups.map(g=>{const n=r.cells[g]||0,[bg,fg]=shade(n);
+      return `<td class="c" style="background:${bg};color:${fg}" data-tip="${esc(r.village)} · ${esc(g)}: ${n} failed spray${n===1?"":"s"}" onmousemove="tip(event)" onmouseleave="untip()">${n||"–"}</td>`}).join("")}</tr>`).join("")+`</table>
+    <div class="legend">Failed sprays: <i style="background:var(--h0)"></i>0 <i style="background:var(--h1)"></i>1 <i style="background:var(--h2)"></i>2 <i style="background:var(--h3)"></i>3 <i style="background:var(--h4)"></i>4+</div>`;
+  $("out").innerHTML=d.outbreaks.length?d.outbreaks.map(o=>`<div class="alert"><b>${esc(o.pest)}</b> in ${esc(o.village)} · ${o.count} plots<div class="muted">${o.plots.join(", ")}</div></div>`).join(""):`<div class="muted">No active outbreaks.</div>`;
+  $("esc").innerHTML=d.escalations.length?d.escalations.map(e=>`<div class="esc ${e.status}"><div style="display:flex;justify-content:space-between;gap:8px"><b>${esc(e.plot_id)}</b><span class="pill ${e.status==="open"?"y":""}">${e.status}</span></div>
+     <div style="margin:6px 0">“${esc(e.question)}”</div>${e.photo_note?`<div class="muted">📷 ${esc(e.photo_note)}</div>`:""}${e.ai_answer?`<div class="muted">🤖 AI: ${esc(e.ai_answer)}</div>`:""}<div class="muted">${e.created} · farmer language: ${esc(e.lang)}</div>
+     ${e.status==="open"?`<textarea id="a-${e.id}" placeholder="Your advice (English is fine, the farmer gets it in their language)"></textarea><div style="margin-top:6px;display:flex;gap:8px"><button class="btn" onclick="answer('${e.id}')">Send to farmer</button></div>`:`<div style="margin-top:6px">✅ ${esc(e.answer)} <span class="muted">— ${esc(e.expert)}, ${e.answered}</span></div>`}</div>`).join(""):`<div class="muted">Queue empty.</div>`;
+  $("eld").innerHTML=d.elder_pending.length?d.elder_pending.map(e=>`<div class="esc open"><div>“${esc(e.text)}”</div><div class="muted">${esc(e.elder)} · ${esc(e.village)}</div>
+     <div style="margin-top:8px;display:flex;gap:8px"><button class="btn" onclick="verify('${e.id}',true)">✔ Verify</button><button class="btn r" onclick="verify('${e.id}',false)">✖ Not safe</button></div></div>`).join(""):`<div class="muted">All tips reviewed.</div>`;
+  $("farmers").innerHTML=`<table><tr><th>Farmer</th><th>Village</th><th>Crop · stage</th><th>Lang</th><th class="n">Records</th><th>Last activity</th><th class="n">Saved</th><th>Doesn't work here</th><th>Check due</th><th></th></tr>`+
+    d.farmers.map(f=>`<tr><td><b>${esc(f.farmer)}</b><div class="muted">${esc(f.id)}</div></td><td>${esc(f.village)}<div class="muted">${esc(f.district)}</div></td><td>${esc(f.crop)}<div class="muted">${esc(f.stage||"")}</div></td><td>${esc(f.lang)}</td>
+      <td class="n">${f.records}</td><td>${esc(f.last_active||"-")}</td><td class="n">${rs(f.ledger.saved_by_memory)}</td><td>${f.allergies.map(a=>`<span class="pill r">${esc(a)}</span>`).join("")||"–"}</td>
+      <td>${f.followups_due?`<span class="pill y">${f.followups_due}</span>`:""}</td><td><a class="pp" href="/passport/${f.id}" target="_blank">📄 Passport</a></td></tr>`).join("")+`</table>`;
+}
+function tip(e){const t=$("tip");t.textContent=e.target.dataset.tip;t.style.display="block";t.style.left=e.clientX+12+"px";t.style.top=e.clientY+12+"px";}
+function untip(){$("tip").style.display="none";}
+async function answer(id){const a=$("a-"+id).value.trim();if(!a)return;
+  await fetch(`/api/escalations/${id}/answer`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({answer:a,expert:"Dr. K. Rao (KVK scientist)"})});load();}
+async function verify(id,v){await fetch(`/api/elder/${id}/verify`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({verified:v})});load();}
+load();
+</script>
+</body>
+</html>

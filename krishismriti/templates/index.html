@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1f6b3a">
+<link rel="manifest" href="/static/manifest.webmanifest">
+<link rel="icon" href="/static/icon.svg">
+<title>KrishiSmriti</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Noto+Sans+Malayalam:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#1f6b3a;--g-d:#154d29;--g-l:#e6f2e9;--cream:#f5f1e6;--card:#fff;--ink:#1d211e;--mut:#5f665f;--line:#e4e0d4;
+--r:#b3261e;--r-l:#fcebea;--y:#8a5a00;--y-l:#fff3d6;--b:#1f5f99;--b-l:#e7f0fa;--sh:0 1px 2px rgba(30,40,30,.06),0 6px 16px rgba(30,40,30,.07)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{font-family:"Noto Sans","Noto Sans Telugu","Noto Sans Devanagari","Noto Sans Tamil","Noto Sans Malayalam",system-ui,sans-serif;color:var(--ink);background:#dfe6dc;font-size:17px}
+.stage{min-height:100%;display:flex;justify-content:center;align-items:flex-start;gap:40px;padding:24px 16px}
+.phone{width:410px;height:860px;background:var(--cream);border-radius:44px;box-shadow:0 0 0 10px #1c1f1c,0 30px 60px rgba(0,0,0,.35);overflow:hidden;position:relative;display:flex;flex-direction:column}
+/* answer panel: beside the phone on a laptop, a full-screen sheet on a phone */
+.panel{width:470px;height:860px;background:var(--cream);border-radius:28px;box-shadow:0 18px 40px rgba(0,0,0,.18);display:flex;flex-direction:column;overflow:hidden}
+.pHead{background:var(--g);color:#fff;padding:16px 18px;display:flex;align-items:center;gap:10px}
+.pHead h2{margin:0;font-size:19px;flex:1}.pHead .x{display:none;background:rgba(255,255,255,.2);border:none;color:#fff;font-size:22px;width:40px;height:40px;border-radius:50%;cursor:pointer}
+.pBody{flex:1;overflow-y:auto;padding:16px}
+.pFoot{padding:10px 16px;border-top:1px solid var(--line);display:flex;gap:14px;font-size:13px;background:#fff}
+.pFoot a{color:var(--g-d);text-decoration:none;font-weight:600}
+.empty{text-align:center;color:var(--mut);padding:10px 8px}.empty .hero{height:150px;border-radius:18px;background:url(/static/img/farm.svg) center/cover;margin-bottom:14px}
+.empty b{display:block;color:var(--ink);font-size:18px;margin-bottom:6px}
+.sugg{display:flex;flex-direction:column;gap:8px;margin-top:14px;text-align:left}.sugg button{background:#fff;border:1.5px dashed var(--line);border-radius:14px;padding:10px 12px;font:inherit;font-size:15px;color:var(--g-d);cursor:pointer;text-align:left}
+.buy{border:1.5px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:8px;background:#fff}
+.buy .top2{display:flex;gap:8px;align-items:flex-start;justify-content:space-between}
+.buy .nm{font-weight:700;font-size:15px}.buy .br{font-size:12px;color:var(--mut)}
+.buy .pr{font-weight:700;font-size:16px;white-space:nowrap}.buy .pk{font-size:12px;color:var(--mut);text-align:right}
+.kind{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;margin-top:4px}
+.kind.natural{background:#e3f3e1;color:#1f6b3a}.kind.chemical{background:#eef0f7;color:#3b4a7a}
+.links{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}.links a{flex:1;min-width:90px;text-align:center;text-decoration:none;font-weight:700;font-size:13px;padding:8px 6px;border-radius:10px;background:#f0b429;color:#3b2a00}
+.links a.alt{background:#fff;border:1.5px solid var(--line);color:var(--ink)}
+.alts{margin-top:8px;font-size:12px;color:var(--mut)}
+.doBtn{margin-top:8px;width:100%;border:none;border-radius:12px;padding:10px;font:inherit;font-weight:700;background:var(--g);color:#fff;cursor:pointer}
+.doBtn.done{background:var(--g-l);color:var(--g-d)}
+.bubble{background:#fff;border-radius:18px;padding:12px 14px;box-shadow:var(--sh);margin-bottom:12px;border-left:6px solid var(--g)}
+.bubble .open{display:none}
+@media (max-width:1000px){body{background:var(--cream)}.stage{padding:0;display:block}.phone{width:100%;height:100dvh;border-radius:0;box-shadow:none}
+ .panel{position:fixed;inset:0;width:100%;height:100dvh;border-radius:0;z-index:50;transform:translateY(100%);transition:transform .28s ease}
+ .panel.open{transform:none}.pHead .x{display:block}.bubble .open{display:block}}
+/* header */
+.top{position:relative;color:#fff;padding:14px 16px 12px;background:#1f6b3a}
+.top:before{content:"";position:absolute;inset:0;background:url(/static/img/farm.svg) center bottom/cover;opacity:.28}
+.top>*{position:relative}
+.row1{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:18px}.brand img{width:30px;height:30px;border-radius:8px}
+.top select{background:rgba(0,0,0,.22);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:10px;padding:6px 8px;font:inherit;font-size:13px;max-width:160px}
+.top select option{color:#000}
+.langBtn{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:10px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.greet{font-size:23px;font-weight:700;margin-top:10px;text-shadow:0 1px 2px rgba(0,0,0,.25)}.sub{opacity:.92;font-size:13px}
+.body{flex:1;overflow-y:auto;padding:14px 14px 110px}
+/* cards */
+.card{background:var(--card);border-radius:20px;padding:14px 16px;margin-bottom:12px;box-shadow:var(--sh)}
+.card h3{margin:0 0 8px;font-size:16px;display:flex;align-items:center;gap:8px;justify-content:space-between}
+.card h3 .t{display:flex;gap:8px;align-items:center}
+.ear{border:none;background:var(--g-l);color:var(--g-d);border-radius:99px;width:44px;height:44px;font-size:20px;cursor:pointer;flex:0 0 auto}
+.muted{color:var(--mut);font-size:13px}
+.alert{background:var(--y-l);border-left:6px solid var(--y)}.inbox{background:var(--b-l);border-left:6px solid var(--b)}
+.listen{display:flex;align-items:center;gap:12px;width:100%;border:none;border-radius:20px;padding:14px 16px;background:linear-gradient(135deg,#f7cf4d,#f0b429);color:#3b2a00;font:inherit;font-weight:700;font-size:18px;cursor:pointer;box-shadow:var(--sh);margin-bottom:12px}
+.listen .i{font-size:30px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.act{border:none;border-radius:20px;background:#fff;box-shadow:var(--sh);padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;font:inherit;font-weight:600;font-size:15px;color:var(--ink);min-height:118px;justify-content:center}
+.act .ic{width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px}
+.act.primary{background:var(--g);color:#fff}.act.primary .ic{background:rgba(255,255,255,.18)}
+.act .ic.g{background:var(--g-l)}.act .ic.y{background:var(--y-l)}.act .ic.b{background:var(--b-l)}
+.secT{font-weight:700;font-size:17px;margin:4px 2px 8px;display:flex;align-items:center;justify-content:space-between}
+.probs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.prob{border:none;background:#fff;border-radius:16px;padding:6px 2px 8px;box-shadow:var(--sh);cursor:pointer;font:inherit;font-size:12px;line-height:1.25;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:4px}
+.prob img{width:100%;max-width:74px;aspect-ratio:1}.prob:active{transform:scale(.96)}
+.stageBar{display:flex;gap:4px;margin:10px 0 6px}.stageBar div{flex:1;height:10px;border-radius:99px;background:#e8e4d8}
+.stageBar div.done{background:#9cc9a8}.stageBar div.cur{background:var(--g)}
+.stageNames{display:flex;justify-content:space-between;font-size:20px}
+.tasks{margin:8px 0 0;padding-left:18px}.tasks li{margin:5px 0;font-size:15px}
+.cropHead{display:flex;gap:12px;align-items:center}.cropHead img{width:64px;height:64px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi b{display:block;font-size:24px}.kpi span{font-size:13px;color:var(--mut)}.kpi.g b{color:var(--g)}.kpi.r b{color:var(--r)}
+.spray{display:flex;align-items:center;gap:12px}.spray .big{font-size:40px}
+.pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;background:var(--g-l);color:var(--g-d);font-weight:600}
+.pill.r{background:var(--r-l);color:var(--r)}.pill.y{background:var(--y-l);color:var(--y)}.pill.b{background:var(--b-l);color:var(--b)}
+.fuBtns{display:flex;gap:8px;margin-top:10px}.fuBtns button{flex:1;font-size:15px;padding:10px 4px;border-radius:16px;border:2px solid var(--line);background:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:inherit}
+.fuBtns button span{font-size:32px}.fuBtns button:nth-child(1){border-color:#9cc9a8}.fuBtns button:nth-child(3){border-color:#e8a59e}
+/* nav */
+nav{position:absolute;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;align-items:flex-end;justify-content:space-around;padding:6px 6px calc(8px + env(safe-area-inset-bottom))}
+nav button{background:none;border:none;font:inherit;font-size:12px;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;width:66px;position:relative}
+nav button .i{font-size:24px}nav button.on{color:var(--g);font-weight:700}
+nav .micNav{width:72px;height:72px;border-radius:50%;background:var(--g);color:#fff;font-size:32px;margin-top:-34px;box-shadow:0 6px 16px rgba(31,107,58,.45);border:4px solid var(--cream);justify-content:center}
+.tab{display:none}.tab.on{display:block}
+/* ask */
+.mic{width:140px;height:140px;border-radius:50%;border:none;background:radial-gradient(circle at 35% 30%,#3a9559,#1f6b3a);color:#fff;font-size:58px;display:block;margin:6px auto 4px;cursor:pointer;box-shadow:0 10px 24px rgba(31,107,58,.35)}
+.mic.rec{background:var(--r);animation:pulse 1s infinite}@keyframes pulse{50%{box-shadow:0 0 0 20px rgba(179,38,30,.15)}}
+.hint{text-align:center;color:var(--mut);font-size:15px;margin-bottom:12px;min-height:22px}
+.hint.live{color:var(--ink);font-weight:600}
+.inrow{display:flex;gap:8px}.inrow input{flex:1;font:inherit;padding:13px 14px;border:2px solid var(--line);border-radius:16px;background:#fff;min-width:0}
+.btn{font:inherit;font-weight:600;padding:12px 16px;border-radius:16px;border:none;background:var(--g);color:#fff;cursor:pointer}
+.btn.ghost{background:#fff;color:var(--g);border:2px solid var(--g)}.btn.sm{padding:9px 12px;font-size:15px}
+.tools{display:flex;gap:8px;margin-top:10px}.tools>*{flex:1;text-align:center}
+.say{font-size:20px;line-height:1.6}
+.ansHead img{width:60px;height:60px;float:left;margin:4px 10px 4px 0}.ansHead:after{content:"";display:block;clear:both}
+.blk{padding:11px 12px;border-radius:14px;margin:8px 0;font-size:15px}.blk.no{background:var(--r-l);border-left:5px solid var(--r)}
+.blk.maybe{background:var(--y-l);border-left:5px solid var(--y)}.blk.yes{background:var(--g-l);border-left:5px solid var(--g)}
+.num{display:inline-flex;width:26px;height:26px;border-radius:50%;background:var(--g);color:#fff;align-items:center;justify-content:center;font-weight:700;font-size:14px;margin-right:6px}
+details{font-size:13px;color:var(--mut);margin-top:8px}details li{margin:4px 0}
+.thinking{text-align:center;padding:24px;color:var(--mut)}
+.thinking .dots span{display:inline-block;width:10px;height:10px;margin:0 3px;border-radius:50%;background:var(--g);animation:bo 1s infinite}
+.thinking .dots span:nth-child(2){animation-delay:.15s}.thinking .dots span:nth-child(3){animation-delay:.3s}@keyframes bo{50%{transform:translateY(-6px);opacity:.4}}
+.tl{border-left:2px solid var(--line);margin-left:8px;padding-left:16px}
+.tl .it{position:relative;margin-bottom:14px;font-size:14px}.tl .it:before{content:"";position:absolute;left:-23px;top:4px;width:12px;height:12px;border-radius:50%;background:#b9b4a6;border:2px solid #fff}
+.tl .it.failed:before{background:var(--r)}.tl .it.worked:before{background:var(--g)}.tl .it.pending:before{background:var(--y)}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.tiles button{background:#fff;border:none;border-radius:18px;padding:14px 6px;box-shadow:var(--sh);font:inherit;font-size:13px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
+.tiles button .i{font-size:32px}
+table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:7px 4px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--mut);font-weight:600}
+.spark{width:100%;height:70px;display:block}.tip{position:absolute;background:#1d211e;color:#fff;font-size:12px;padding:4px 8px;border-radius:8px;pointer-events:none;display:none;white-space:nowrap;z-index:20}
+.back{background:none;border:none;color:var(--g);font:inherit;font-weight:700;cursor:pointer;padding:0 0 10px;font-size:17px}
+input.f,select.f{font:inherit;padding:10px 12px;border:2px solid var(--line);border-radius:12px;width:100%;margin-bottom:8px;background:#fff}
+.toast{position:absolute;left:50%;bottom:104px;transform:translateX(-50%);background:#1d211e;color:#fff;padding:12px 16px;border-radius:14px;font-size:15px;opacity:0;transition:.3s;pointer-events:none;max-width:88%;text-align:center;z-index:30}
+.toast.on{opacity:1}
+/* language picker */
+.langPick{position:absolute;inset:0;background:var(--cream);z-index:40;display:none;flex-direction:column;padding:26px 18px;overflow-y:auto}
+.langPick.on{display:flex}
+.langPick .hero{height:130px;border-radius:20px;background:url(/static/img/farm.svg) center/cover;margin-bottom:16px}
+.langPick h2{margin:0 0 4px;font-size:22px}.langGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.langGrid button{border:2px solid var(--line);background:#fff;border-radius:18px;padding:16px 8px;font:inherit;font-size:22px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.langGrid button small{font-size:12px;font-weight:400;color:var(--mut)}.langGrid button.on{border-color:var(--g);background:var(--g-l)}
+</style>
+</head>
+<body>
+<div class="stage">
+<div class="phone" id="app">
+  <div class="top">
+    <div class="row1">
+      <div class="brand"><img src="/static/icon.svg" alt="">KrishiSmriti</div>
+      <div style="display:flex;gap:6px"><button class="langBtn" onclick="openLang()" id="langBtn">🌐</button><select id="plot" onchange="switchPlot()" aria-label="Demo farmer"></select></div>
+    </div>
+    <div class="greet" id="greet">…</div>
+    <div class="sub" id="sub"></div>
+  </div>
+
+  <div class="body" id="body">
+    <section class="tab on" id="t-home"></section>
+
+    <section class="tab" id="t-ask">
+      <div id="askOut"></div>
+      <button class="mic" id="micAsk" onclick="toggleRec('ask')" aria-label="Speak">🎙️</button>
+      <div class="hint" id="askHint" data-i18n="askHint">Tap the mic and speak your crop problem</div>
+      <div class="inrow"><input id="askText" placeholder="…" enterkeyhint="send"><button class="btn" onclick="ask()" aria-label="Send">➤</button></div>
+      <div class="tools">
+        <label class="btn ghost sm">📷 <span data-i18n="photo">Leaf photo</span><input type="file" id="photo" accept="image/*" capture="environment" hidden onchange="photoPicked()"></label>
+        <button class="btn ghost sm" onclick="askExpert()">👨‍🔬 <span data-i18n="expert">Ask expert</span></button>
+      </div>
+      <div id="photoName" class="muted" style="margin-top:6px"></div>
+      <div class="secT" style="margin-top:14px"><span data-i18n="see">What do you see? Tap the picture</span></div>
+      <div class="probs" id="probsAsk"></div>
+    </section>
+
+    <section class="tab" id="t-log">
+      <button class="mic" id="micLog" onclick="toggleRec('log')">🎙️</button>
+      <div class="hint" id="logHint" data-i18n="logHint">Tell what you did: spray, seed, fertiliser, harvest</div>
+      <div class="inrow"><input id="logText" placeholder="e.g. Yesterday sprayed neem oil for whitefly, 320 rupees" enterkeyhint="send"><button class="btn" onclick="logIt()">➤</button></div>
+      <div id="logOut"></div>
+      <div class="card" style="margin-top:12px"><h3><span class="t">🧾 <span data-i18n="scanT">Old bills or notebook?</span></span></h3>
+        <div class="muted">Take a photo of old pesticide bills. Every item is added to your farm memory, then I ask if each one worked.</div>
+        <label class="btn ghost sm" style="display:block;text-align:center;margin-top:10px">📸 Scan bill<input type="file" accept="image/*" capture="environment" hidden onchange="scanBill(this)"></label>
+      </div>
+    </section>
+
+    <section class="tab" id="t-chart"></section>
+    <section class="tab" id="t-more"></section>
+  </div>
+
+  <nav>
+    <button class="on" data-t="home" onclick="tab('home')"><span class="i">🏠</span><i data-i18n="nHome">Home</i></button>
+    <button data-t="chart" onclick="tab('chart')"><span class="i">📋</span><i data-i18n="nChart">My farm</i></button>
+    <button class="micNav" data-t="ask" onclick="tab('ask')" aria-label="Ask">🎙️</button>
+    <button data-t="log" onclick="tab('log')"><span class="i">📝</span><i data-i18n="nLog">Tell</i></button>
+    <button data-t="more" onclick="tab('more')"><span class="i">☰</span><i data-i18n="nMore">More</i></button>
+  </nav>
+
+  <div class="langPick" id="langPick">
+    <div class="hero"></div>
+    <h2>🌾 KrishiSmriti</h2>
+    <div class="muted" style="font-size:15px">Choose your language · अपनी भाषा चुनें · మీ భాష ఎంచుకోండి</div>
+    <div class="langGrid" id="langGrid"></div>
+  </div>
+  <div class="tip" id="tip"></div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<aside class="panel" id="panel" aria-live="polite">
+  <div class="pHead"><span style="font-size:24px">🌾</span><h2 id="pTitle">Answer</h2><button class="ear" id="pEar" style="display:none" onclick="play(lastQ.audio_b64,lastQ.advice.speak)">🔊</button><button class="x" onclick="closePanel()" aria-label="Close">✕</button></div>
+  <div class="pBody" id="pBody"></div>
+  <div class="pFoot"><a href="/agent" target="_blank">🧑‍💼 Field agent desk</a><a id="passLink" href="/passport/PLOT-14" target="_blank">📄 Plot passport</a></div>
+</aside>
+</div>
+</div>
+
+<script>
+const I18N={
+ te:{ansT:"సమాధానం",thinking:"మీ పొలం జ్ఞాపకం చూస్తున్నాను…",emptyT:"మీ పంట గురించి ఏదైనా అడగండి",emptyD:"మాట్లాడండి, టైప్ చేయండి, లేదా బొమ్మను నొక్కండి. సమాధానం ఇక్కడ వస్తుంది.",sug1:"ఆకులు పసుపు అవుతున్నాయి",sug2:"కాయల్లో పురుగులు ఉన్నాయి",natural:"సహజం",chemical:"రసాయనం",natAlt:"సహజ ప్రత్యామ్నాయం",willDo:"ఇది చేస్తాను",sentExpert:"KVK నిపుణుడికి పంపాను. సమాధానం హోమ్ స్క్రీన్‌లో వస్తుంది.",notSure:"సందేహమా? నిపుణుడిని అడగండి",ready:"సమాధానం సిద్ధం",openAns:"పూర్తి సమాధానం చూడండి",sameGroup:"అదే మందు గుంపు, ఇవీ వద్దు",askHint:"మైక్ నొక్కి మీ పంట సమస్య చెప్పండి",logHint:"ఏమి చేశారో చెప్పండి: మందు, విత్తనం, ఎరువు, కోత",photo:"ఆకు ఫోటో",expert:"నిపుణుడిని అడగండి",nHome:"హోమ్",nChart:"నా పొలం",nLog:"చెప్పండి",nMore:"ఇంకా",scanT:"పాత బిల్లులు ఉన్నాయా?",stage:"పంట దశ",day:"రోజు",today:"ఇప్పుడు చేయాల్సినవి",spray:"పిచికారీ సమయం",money:"మీ డబ్బు",saved:"జ్ఞాపకం వల్ల ఆదా",wasted:"విఫలమైన మందులపై నష్టం",price:"మార్కెట్ ధర",check:"పని చేసిందా?",allergy:"ఈ పొలానికి పనికిరాని మందులు",expertMsg:"నిపుణుడి సమాధానం",listen:"ఈరోజు సమాచారం వినండి",aSpeak:"సమస్య చెప్పండి",aPhoto:"బొమ్మ చూపించండి",aLog:"ఏమి చేశారో చెప్పండి",aFarm:"నా పొలం",see:"మీకు ఏమి కనిపిస్తోంది? బొమ్మను నొక్కండి",yes:"అవును",little:"కొంచెం",no:"లేదు",listening:"వింటున్నాను… మాట్లాడండి",doThis:"ఇలా చేయండి",dont:"ఇది వాడకండి",again:"మళ్ళీ వినండి"},
+ hi:{ansT:"जवाब",thinking:"आपके खेत की याद देख रहा हूं…",emptyT:"अपनी फसल के बारे में कुछ भी पूछिए",emptyD:"बोलिए, लिखिए, या तस्वीर दबाइए। जवाब यहां आएगा।",sug1:"पत्ते पीले हो रहे हैं",sug2:"टिंडों में सुंडी है",natural:"प्राकृतिक",chemical:"रासायनिक",natAlt:"प्राकृतिक विकल्प",willDo:"मैं यह करूंगा",sentExpert:"KVK विशेषज्ञ को भेज दिया। जवाब होम स्क्रीन पर आएगा।",notSure:"पक्का नहीं? विशेषज्ञ से पूछें",ready:"जवाब तैयार",openAns:"पूरा जवाब देखें",sameGroup:"वही दवा समूह, ये भी नहीं",askHint:"माइक दबाइए और अपनी फसल की समस्या बोलिए",logHint:"बताइए क्या किया: दवा, बीज, खाद, कटाई",photo:"पत्ते की फोटो",expert:"विशेषज्ञ से पूछें",nHome:"होम",nChart:"मेरा खेत",nLog:"बताएं",nMore:"और",scanT:"पुराने बिल हैं?",stage:"फसल की अवस्था",day:"दिन",today:"अभी के काम",spray:"छिड़काव का समय",money:"आपका पैसा",saved:"याद से बचत",wasted:"फेल दवाओं पर नुकसान",price:"मंडी भाव",check:"क्या फायदा हुआ?",allergy:"इस खेत में बेकार दवाएं",expertMsg:"विशेषज्ञ का जवाब",listen:"आज की जानकारी सुनिए",aSpeak:"समस्या बोलिए",aPhoto:"तस्वीर दिखाइए",aLog:"क्या किया बताइए",aFarm:"मेरा खेत",see:"क्या दिख रहा है? तस्वीर दबाइए",yes:"हां",little:"थोड़ा",no:"नहीं",listening:"सुन रहा हूं… बोलिए",doThis:"यह करें",dont:"यह मत डालें",again:"फिर से सुनें"},
+ ta:{ansT:"பதில்",thinking:"உங்கள் நில நினைவை பார்க்கிறேன்…",emptyT:"உங்கள் பயிர் பற்றி எதையும் கேளுங்கள்",emptyD:"பேசுங்கள், தட்டச்சு செய்யுங்கள், அல்லது படத்தை அழுத்துங்கள். பதில் இங்கே வரும்.",sug1:"இலைகள் மஞ்சளாகின்றன",sug2:"காய்களில் புழு உள்ளது",natural:"இயற்கை",chemical:"இரசாயனம்",natAlt:"இயற்கை மாற்று",willDo:"இதை செய்வேன்",sentExpert:"KVK நிபுணருக்கு அனுப்பினேன். பதில் முகப்பில் வரும்.",notSure:"சந்தேகமா? நிபுணரிடம் கேளுங்கள்",ready:"பதில் தயார்",openAns:"முழு பதிலை பாருங்கள்",sameGroup:"அதே மருந்து வகை, இவையும் வேண்டாம்",askHint:"மைக்கை அழுத்தி உங்கள் பயிர் பிரச்சனையை சொல்லுங்கள்",logHint:"என்ன செய்தீர்கள் என்று சொல்லுங்கள்",photo:"இலை புகைப்படம்",expert:"நிபுணரிடம் கேள்",nHome:"முகப்பு",nChart:"என் நிலம்",nLog:"சொல்",nMore:"மேலும்",scanT:"பழைய பில்கள் உள்ளதா?",stage:"பயிர் நிலை",day:"நாள்",today:"இப்போது செய்ய வேண்டியவை",spray:"தெளிப்பு நேரம்",money:"உங்கள் பணம்",saved:"நினைவால் சேமிப்பு",wasted:"தோல்வியில் இழப்பு",price:"சந்தை விலை",check:"பலன் கிடைத்ததா?",allergy:"இந்த நிலத்தில் பலனில்லாத மருந்துகள்",expertMsg:"நிபுணர் பதில்",listen:"இன்றைய தகவலை கேளுங்கள்",aSpeak:"பிரச்சனை சொல்",aPhoto:"படம் காட்டு",aLog:"செய்ததை சொல்",aFarm:"என் நிலம்",see:"என்ன தெரிகிறது? படத்தை அழுத்துங்கள்",yes:"ஆம்",little:"கொஞ்சம்",no:"இல்லை",listening:"கேட்கிறேன்… பேசுங்கள்",doThis:"இதை செய்யுங்கள்",dont:"இதை பயன்படுத்த வேண்டாம்",again:"மீண்டும் கேள்"},
+ ml:{ansT:"മറുപടി",thinking:"നിങ്ങളുടെ പാട ഓർമ്മ നോക്കുന്നു…",emptyT:"വിളയെക്കുറിച്ച് എന്തും ചോദിക്കൂ",emptyD:"സംസാരിക്കൂ, ടൈപ്പ് ചെയ്യൂ, അല്ലെങ്കിൽ ചിത്രം അമർത്തൂ. മറുപടി ഇവിടെ വരും.",sug1:"ഇലകൾ മഞ്ഞളിക്കുന്നു",sug2:"കായ്കളിൽ പുഴു",natural:"പ്രകൃതിദത്തം",chemical:"രാസവസ്തു",natAlt:"പ്രകൃതിദത്ത പകരം",willDo:"ഞാൻ ഇത് ചെയ്യും",sentExpert:"KVK വിദഗ്ധന് അയച്ചു. മറുപടി ഹോമിൽ വരും.",notSure:"ഉറപ്പില്ലേ? വിദഗ്ധനോട് ചോദിക്കൂ",ready:"മറുപടി തയ്യാർ",openAns:"മുഴുവൻ മറുപടി കാണൂ",sameGroup:"ഒരേ മരുന്ന് വിഭാഗം, ഇവയും വേണ്ട",askHint:"മൈക്ക് അമർത്തി നിങ്ങളുടെ വിള പ്രശ്നം പറയൂ",logHint:"എന്ത് ചെയ്തു എന്ന് പറയൂ",photo:"ഇലയുടെ ഫോട്ടോ",expert:"വിദഗ്ധനോട് ചോദിക്കൂ",nHome:"ഹോം",nChart:"എന്റെ പാടം",nLog:"പറയൂ",nMore:"കൂടുതൽ",scanT:"പഴയ ബില്ലുകൾ ഉണ്ടോ?",stage:"വിള ഘട്ടം",day:"ദിവസം",today:"ഇപ്പോൾ ചെയ്യേണ്ടത്",spray:"തളിക്കാനുള്ള സമയം",money:"നിങ്ങളുടെ പണം",saved:"ഓർമ്മയിലൂടെ ലാഭം",wasted:"പരാജയപ്പെട്ട മരുന്നുകളിൽ നഷ്ടം",price:"വിപണി വില",check:"ഫലിച്ചോ?",allergy:"ഈ പാടത്ത് ഫലിക്കാത്ത മരുന്നുകൾ",expertMsg:"വിദഗ്ധന്റെ മറുപടി",listen:"ഇന്നത്തെ വിവരം കേൾക്കൂ",aSpeak:"പ്രശ്നം പറയൂ",aPhoto:"ചിത്രം കാണിക്കൂ",aLog:"ചെയ്തത് പറയൂ",aFarm:"എന്റെ പാടം",see:"എന്താണ് കാണുന്നത്? ചിത്രം അമർത്തൂ",yes:"അതെ",little:"കുറച്ച്",no:"ഇല്ല",listening:"കേൾക്കുന്നു… സംസാരിക്കൂ",doThis:"ഇത് ചെയ്യൂ",dont:"ഇത് ഉപയോഗിക്കരുത്",again:"വീണ്ടും കേൾക്കൂ"}
+};
+const EN={ansT:"Answer",thinking:"Checking this plot's memory…",emptyT:"Ask anything about your crop",emptyD:"Speak, type, or tap a picture on the phone. The answer shows here.",sug1:"Leaves are turning yellow",sug2:"Worms in the bolls",natural:"Natural",chemical:"Chemical",natAlt:"Natural option",willDo:"I will do this",priceNote:"Prices are approximate. Links open a search on the shop's site. Read the label before use.",sentExpert:"Sent to the KVK expert. The answer will come on your home screen.",notSure:"Not sure? Ask the expert",ready:"Answer ready",openAns:"Open full answer",sameGroup:"Same chemical group, also blocked",stage:"Crop stage",day:"Day",today:"To do now",spray:"Spray window",money:"Your money",saved:"saved by memory",wasted:"lost on failed sprays",price:"Market price",check:"Did it work?",allergy:"Doesn't work on this plot",expertMsg:"Expert replied",listen:"Listen to today's update",aSpeak:"Speak problem",aPhoto:"Show a picture",aLog:"Tell what I did",aFarm:"My farm",see:"What do you see? Tap the picture",yes:"Yes",little:"A little",no:"No",listening:"Listening… speak now",doThis:"Do this",dont:"Do NOT use",again:"Listen again"};
+const TRY={"PLOT-14":"Dealer is giving me thiamethoxam for whitefly. Is it ok?","PLOT-41":"Sheath blight again on paddy. Can I use carbendazim?","PLOT-9":"Whitefly is increasing. Can I spray acetamiprid?","PLOT-22":"धान में तना छेदक फिर से आ गया है, क्या करूं?"};
+const SR_LANG={te:"te-IN",hi:"hi-IN",ta:"ta-IN",ml:"ml-IN",kn:"kn-IN",mr:"mr-IN",bn:"bn-IN",gu:"gu-IN",pa:"pa-IN",en:"en-IN"};
+let LANG="te",LANGS={},PLOTS=[],PROBS=[],HOME=null,STATUS={},rec=null,chunks=[],recMode=null,lastAudio=null,sr=null;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const T=k=>(I18N[LANG]||{})[k]||EN[k]||k;
+const pid=()=>$("plot").value;
+const rs=n=>"₹"+Number(n||0).toLocaleString("en-IN");
+const plot=()=>PLOTS.find(p=>p.id===pid());
+const store={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("on"),2600);}
+async function api(u,opt={}){const c=new AbortController();const to=setTimeout(()=>c.abort(),60000);
+  try{const r=await fetch(u,{...opt,signal:c.signal});let d;try{d=await r.json();}catch(e){throw new Error("Server error ("+r.status+"). Check the black run.bat window.");}
+    if(!r.ok)throw new Error(d.detail||"Error");return d;}
+  catch(e){if(e.name==="AbortError")throw new Error("Taking too long. Check your internet and try again.");if(e.message==="Failed to fetch")throw new Error("Can't reach the app server. Is the run.bat window still open?");throw e;}
+  finally{clearTimeout(to);}}
+
+async function init(){
+  if("serviceWorker" in navigator)navigator.serviceWorker.register("/static/sw.js").catch(()=>{});
+  STATUS=await api("/api/status");LANGS=STATUS.languages;
+  $("langGrid").innerHTML=Object.entries(LANGS).map(([c,l])=>`<button data-l="${c}" onclick="pickLang('${c}')">${l.native}<small>${l.name}</small></button>`).join("");
+  [PLOTS,PROBS]=await Promise.all([api("/api/plots"),api("/api/problems")]);
+  $("plot").innerHTML=PLOTS.map(p=>`<option value="${p.id}">${esc(p.farmer)} · ${esc(p.village)}</option>`).join("");
+  ["askText","logText"].forEach(id=>$(id).addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();id==="askText"?ask():logIt();}}));
+  const saved=store.get("ks_lang");
+  switchPlot(saved);
+  if(!saved)openLang();
+}
+function openLang(){document.querySelectorAll("#langGrid button").forEach(b=>b.classList.toggle("on",b.dataset.l===LANG));$("langPick").classList.add("on");}
+function pickLang(c){store.set("ks_lang",c);$("langPick").classList.remove("on");setLang(c);}
+function switchPlot(forceLang){const p=plot();$("passLink").href="/passport/"+p.id;setLang(forceLang||p.lang||"te",true);
+  $("askText").value="";$("askOut").innerHTML="";$("logOut").innerHTML="";$("askText").placeholder=TRY[p.id]||"…";panelEmpty();loadHome();if(cur!=="home")tab(cur);}
+function setLang(c,skip){LANG=c;$("langBtn").textContent="🌐 "+(LANGS[c]?LANGS[c].native:c);
+  document.querySelectorAll("[data-i18n]").forEach(el=>{if(!el.dataset.en)el.dataset.en=el.textContent;el.textContent=(I18N[c]||{})[el.dataset.i18n]||el.dataset.en;});
+  $("probsAsk").innerHTML=probGrid();if(!lastQ&&PLOTS.length)panelEmpty();if(!skip)loadHome();}
+function probGrid(){return PROBS.map(p=>`<button class="prob" onclick="askProblem('${p.key}')"><img src="${p.img}" alt="">${esc(p.names[LANG]||p.names.en)}</button>`).join("");}
+function askProblem(k){const p=PROBS.find(x=>x.key===k);const local=p.names[LANG]||p.names.en;
+  $("askText").value=LANG==="en"?`${p.names.en} on my crop. What should I do?`:`${local} (${p.names.en})`;tab("ask");ask();}
+let cur="home";
+function tab(n){cur=n;document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.id==="t-"+n));
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===n));$("body").scrollTop=0;
+  if(n==="chart")loadChart();if(n==="more")loadMore();}
+
+// ---------- audio out ----------
+function play(b64,text){if(lastAudio)lastAudio.pause();if(window.speechSynthesis)speechSynthesis.cancel();
+  if(b64){lastAudio=new Audio("data:audio/mp3;base64,"+b64);lastAudio.play().catch(()=>browserSay(text));return;}
+  browserSay(text);}
+function browserSay(text,lang){lang=lang||LANG;if(!text||!window.speechSynthesis)return;const u=new SpeechSynthesisUtterance(text);u.lang=SR_LANG[lang]||"en-IN";
+  const v=speechSynthesis.getVoices().find(v=>v.lang&&v.lang.toLowerCase().startsWith(lang));if(v)u.voice=v;speechSynthesis.speak(u);}
+const SAY=[];function ear(text,b64){SAY.push([text,b64]);return `<button class="ear" title="Listen" onclick="listen(${SAY.length-1},this)">🔊</button>`;}
+async function listen(i,btn){const [text,b64]=SAY[i];if(b64)return play(b64,text);if(btn)btn.textContent="…";
+  try{const d=await api("/api/speak",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text,lang:LANG})});SAY[i][1]=d.audio_b64;if(d.audio_b64)play(d.audio_b64);else browserSay(d.text,d.voice_lang);}catch(e){play(null,text);}if(btn)btn.textContent="🔊";}
+
+// ---------- voice in: browser speech recognition (free, no key) ----------
+function hasSR(){return !!(window.SpeechRecognition||window.webkitSpeechRecognition);}
+async function toggleRec(mode){
+  const btn={ask:$("micAsk"),log:$("micLog")}[mode],input=mode==="ask"?$("askText"):$("logText"),hint=mode==="ask"?$("askHint"):$("logHint");
+  if(sr){sr.stop();return;}
+  if(rec&&rec.state==="recording"){rec.stop();return;}
+  if(hasSR()){
+    const R=window.SpeechRecognition||window.webkitSpeechRecognition;sr=new R();sr.lang=SR_LANG[LANG]||"en-IN";sr.interimResults=true;sr.continuous=false;
+    let finalText="";btn.classList.add("rec");btn.textContent="⏹";hint.textContent=T("listening");hint.classList.add("live");input.value="";
+    sr.onresult=e=>{let t="";for(const r of e.results)t+=r[0].transcript;input.value=t;if(e.results[e.results.length-1].isFinal)finalText=t;};
+    sr.onerror=e=>{toast(e.error==="not-allowed"?"Allow the microphone in the browser (click the 🔒 next to the address)":e.error==="network"?"Voice needs internet":"Didn't catch that. Try again.");};
+    sr.onend=()=>{sr=null;btn.classList.remove("rec");btn.textContent="🎙️";hint.classList.remove("live");hint.textContent=(I18N[LANG]||{})[hint.dataset.i18n]||hint.dataset.en||"";
+      if(input.value.trim())mode==="ask"?ask():logIt();};
+    try{sr.start();}catch(e){sr=null;toast(e.message);}return;}
+  if(!STATUS.server_voice){toast("Voice needs Chrome or Edge. You can type or tap a picture.");return;}
+  try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});chunks=[];recMode=mode;rec=new MediaRecorder(stream);
+    rec.ondataavailable=e=>chunks.push(e.data);
+    rec.onstop=()=>{stream.getTracks().forEach(t=>t.stop());btn.classList.remove("rec");btn.textContent="🎙️";
+      const blob=new Blob(chunks,{type:rec.mimeType||"audio/webm"});recMode==="ask"?ask(blob):logIt(blob);};
+    rec.start();btn.classList.add("rec");btn.textContent="⏹";}
+  catch(e){toast("Microphone not available: "+e.message);}}
+function photoPicked(){const f=$("photo").files[0];$("photoName").textContent=f?"📷 "+f.name+" attached. Now speak or tap ➤":"";if(f&&!STATUS.server_voice)$("photoName").textContent+=" (photo check needs the AI key; tap a picture below instead)";}
+const thinking=msg=>`<div class="thinking"><div class="dots"><span></span><span></span><span></span></div><div style="margin-top:8px">${msg}</div></div>`;
+
+// ---------- home ----------
+async function loadHome(){
+  SAY.length=0;$("t-home").innerHTML=thinking("");
+  let h;try{h=HOME=await api(`/api/home/${pid()}?lang=${LANG}`);}catch(e){$("t-home").innerHTML=`<div class="blk no">${esc(e.message)}</div>`;return;}
+  const p=h.plot;
+  $("greet").textContent=h.greeting+" 🙏";$("sub").textContent=`${p.crop} · ${p.area_acres} acres · ${p.village}, ${p.district}`;
+  const s=h.stage,w=h.weather,L=h.ledger;
+  const brief=[h.greeting+"."].concat(h.inbox.filter(m=>!m.read).map(m=>m.text),h.alerts.map(a=>a.text),s?[`${s.stage}. ${s.tasks[0]}.`]:[],w?[w.advice]:[]).join(" ");
+  let x=`<button class="listen" onclick="listen(${SAY.push([brief,null])-1})"><span class="i">🔊</span><span>${T("listen")}</span></button>
+  <div class="actions">
+    <button class="act primary" onclick="tab('ask');setTimeout(()=>toggleRec('ask'),200)"><span class="ic">🎙️</span>${T("aSpeak")}</button>
+    <button class="act" onclick="tab('ask');setTimeout(()=>$('probsAsk').scrollIntoView({behavior:'smooth'}),100)"><span class="ic y">🐛</span>${T("aPhoto")}</button>
+    <button class="act" onclick="tab('log')"><span class="ic g">📝</span>${T("aLog")}</button>
+    <button class="act" onclick="tab('chart')"><span class="ic b">📋</span>${T("aFarm")}</button>
+  </div>`;
+  h.inbox.filter(m=>!m.read).forEach(m=>{x+=`<div class="card inbox"><h3><span class="t">👨‍🔬 ${T("expertMsg")}</span>${ear(m.text)}</h3><div class="say" style="font-size:17px">${esc(m.text)}</div><div class="muted">${esc(m.from)} · ${m.date}</div></div>`;});
+  h.alerts.forEach(a=>{const pr=PROBS.find(z=>z.key===a.pest.toLowerCase());x+=`<div class="card alert"><h3><span class="t">⚠️ ${esc(pr?(pr.names[LANG]||pr.names.en):a.pest)} · ${a.count}</span>${ear(a.text)}</h3><div style="display:flex;gap:10px;align-items:center">${pr?`<img src="${pr.img}" width="56" height="56" alt="">`:""}<div>${esc(a.text)}</div></div></div>`;});
+  if(h.followups_due)x+=`<div class="card" id="fuHome"></div>`;
+  if(s){const cropImg=`/static/img/${p.crop_key||"cotton"}.svg`;
+    x+=`<div class="card"><h3><span class="t">${T("stage")}</span>${ear(`${s.stage}. ${s.tasks.join(". ")}`)}</h3>
+    <div class="cropHead"><img src="${cropImg}" alt=""><div><div style="font-size:20px;font-weight:700">${s.icon} ${esc(s.stage)}</div><div class="muted">${T("day")} ${s.das}${s.next?` · ${esc(s.next.name)} in ${s.next.in_days} day${s.next.in_days===1?"":"s"}`:""}</div></div></div>
+    <div class="stageBar">${s.stages.map((st,i)=>`<div class="${st.current?"cur":(s.stages.findIndex(z=>z.current)>i?"done":"")}" title="${esc(st.name)} (day ${st.start}-${st.end})"></div>`).join("")}</div>
+    <div class="stageNames">${s.stages.map(st=>`<span title="${esc(st.name)}" style="opacity:${st.current?1:.4}">${st.icon}</span>`).join("")}</div>
+    <div class="muted" style="margin-top:10px;font-weight:700">${T("today")}</div><ul class="tasks">${s.tasks.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>${(s.buy||[]).map(buyCard).join("")}</div>`;}
+  x+=`<div class="secT"><span>${T("see")}</span></div><div class="probs">${probGrid()}</div>`;
+  x+=`<div class="card"><h3><span class="t">🌦️ ${T("spray")}</span>${w?ear(w.advice):""}</h3>`+(w?`<div class="spray"><div class="big">${w.ok_to_spray?"✅":"⛔"}</div><div><b>${esc(w.advice)}</b><div class="muted">🌧️ ${w.max_rain_prob}% · 💨 ${w.max_wind_kmh} km/h · 🌡️ ${w.max_temp_c}°C · 💧 ${w.avg_humidity}%</div></div></div>`:`<div class="muted">Weather needs internet. Check again later.</div>`)+`</div>`;
+  x+=`<div class="card"><h3><span class="t">💰 ${T("money")}</span>${ear(`${rs(L.saved_by_memory)} ${EN.saved}. ${rs(L.wasted_on_failures)} ${EN.wasted}.`)}</h3>
+   <div class="grid2"><div class="kpi g"><b>${rs(L.saved_by_memory)}</b><span>${T("saved")}</span></div><div class="kpi r"><b>${rs(L.wasted_on_failures)}</b><span>${T("wasted")}</span></div></div></div>`;
+  if(h.allergy.length)x+=`<div class="card"><h3><span class="t">⚕️ ${T("allergy")}</span>${ear(h.allergy.map(a=>`${a.product} failed ${a.count} times`).join(". "))}</h3>${h.allergy.map(a=>`<div class="blk no"><b>⛔ ${esc(a.product)}</b> · ✖ ${a.count}× · ${esc(a.moa||"")}</div>`).join("")}</div>`;
+  const m=h.market;
+  if(m&&m.today){x+=`<div class="card"><h3><span class="t">📈 ${T("price")}</span>${ear(`${p.crop} price ${m.today} rupees per quintal`)}</h3>
+   <div style="display:flex;align-items:baseline;gap:10px"><b style="font-size:26px">${rs(m.today)}</b><span class="muted">/ quintal</span>${m.change_7d_pct!=null?`<span class="pill ${m.change_7d_pct<0?"r":""}">${m.change_7d_pct>0?"▲":"▼"} ${Math.abs(m.change_7d_pct)}% 7d</span>`:""}</div>
+   ${m.series&&m.series.length?spark(m.series,m.msp):""}${m.msp?`<div class="muted">MSP ${rs(m.msp[0])} (${esc(m.msp[1])})</div>`:""}<div class="muted" style="font-size:11px">${esc(m.source)}</div></div>`;}
+  $("t-home").innerHTML=x;
+  if(h.followups_due)loadFollowups();
+}
+function spark(series,msp){
+  const W=340,H=70,P=4,vals=series.map(s=>s.modal),lo=Math.min(...vals,msp?msp[0]:Infinity)*0.99,hi=Math.max(...vals)*1.01;
+  const X=i=>P+i*(W-2*P)/(vals.length-1),Y=v=>H-P-(v-lo)/(hi-lo)*(H-2*P);
+  const d=vals.map((v,i)=>(i?"L":"M")+X(i).toFixed(1)+","+Y(v).toFixed(1)).join("");window._sp=series;
+  return `<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" onmousemove="spHover(event,this)" onmouseleave="$('tip').style.display='none'">
+   ${msp?`<line x1="0" x2="${W}" y1="${Y(msp[0])}" y2="${Y(msp[0])}" stroke="#8a5a00" stroke-dasharray="4 4" stroke-width="1"/>`:""}
+   <path d="${d}" fill="none" stroke="#1f6b3a" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+   <circle cx="${X(vals.length-1)}" cy="${Y(vals[vals.length-1])}" r="4" fill="#1f6b3a" stroke="#fff" stroke-width="2"/></svg>`;}
+function spHover(e,svg){const r=svg.getBoundingClientRect(),s=window._sp,i=Math.max(0,Math.min(s.length-1,Math.round((e.clientX-r.left)/r.width*(s.length-1))));
+  const t=$("tip"),app=$("app").getBoundingClientRect();t.style.display="block";t.textContent=`${s[i].date}: ${rs(s[i].modal)}`;t.style.left=(e.clientX-app.left-40)+"px";t.style.top=(r.top-app.top-26)+"px";}
+async function loadFollowups(){
+  const el=$("fuHome");if(!el)return;let d;try{d=await api(`/api/followups?plot_id=${pid()}&lang=${LANG}`);}catch(e){el.remove();return;}
+  if(!d.length){el.remove();return;}const f=d[0];
+  el.innerHTML=`<h3><span class="t">🔔 ${T("check")}</span><button class="ear" onclick="play(window._fu,window._fuT)">🔊</button></h3><div class="say" style="font-size:18px">${esc(f.question)}</div>
+   <div class="fuBtns"><button onclick="fu('${f.id}','worked')"><span>👍</span>${T("yes")}</button><button onclick="fu('${f.id}','partial')"><span>🤏</span>${T("little")}</button><button onclick="fu('${f.id}','failed')"><span>👎</span>${T("no")}</button></div>`;
+  window._fu=f.audio_b64;window._fuT=f.question;}
+async function fu(id,outcome){try{await api("/api/followups/"+id,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({outcome})});
+  toast({worked:"👍 Saved: it worked",partial:"🤏 Saved: partly worked",failed:"👎 Saved. I won't suggest it again."}[outcome]);loadHome();}catch(e){toast(e.message);}}
+
+// ---------- ask ----------
+let lastQ=null;
+function openPanel(){$("panel").classList.add("open");}
+function closePanel(){$("panel").classList.remove("open");}
+function panelEmpty(){
+  $("pTitle").textContent=T("ansT");$("pEar").style.display="none";
+  const p=plot();const sug=[TRY[p.id]].filter(Boolean).concat([T("sug1"),T("sug2")]);
+  $("pBody").innerHTML=`<div class="empty"><div class="hero"></div><b>${T("emptyT")}</b>${T("emptyD")}
+   <div class="sugg">${sug.map(q=>`<button onclick="$('askText').value=this.textContent;tab('ask');ask()">💬 ${esc(q)}</button>`).join("")}</div></div>`;}
+function buyCard(b){if(!b)return"";
+  const kind=b.kind==="natural"?`<span class="kind natural">🌿 ${T("natural")}</span>`:`<span class="kind chemical">🧪 ${T("chemical")}</span>`;
+  return `<div class="buy"><div class="top2"><div><div class="nm">${esc(b.name)}</div><div class="br">${esc(b.brands)}</div>${kind}</div>
+   <div><div class="pr">${esc(b.price)}</div><div class="pk">${esc(b.pack)}</div></div></div>
+   <div class="links">${b.links.map((l,i)=>`<a class="${i==2?"alt":""}" href="${l.url}" target="_blank" rel="noopener">${i==2?"📍":"🛒"} ${esc(l.label)}</a>`).join("")}</div>
+   ${b.natural_alternatives&&b.natural_alternatives.length?`<div class="alts">🌿 ${T("natAlt")}: ${b.natural_alternatives.map(n=>`<a href="${n.links[0].url}" target="_blank" rel="noopener">${esc(n.name)} (${esc(n.price)})</a>`).join(" · ")}</div>`:""}</div>`;}
+async function adoptRec(i,btn){const r=lastQ.advice.recommend[i];btn.disabled=true;
+  try{const d=await api("/api/adopt",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({plot_id:pid(),lang:LANG,action:r.action,product:r.product||(r.buy&&r.buy[0]?r.buy[0].key:null),target:r.target||lastQ.advice.problem,cost:r.est_cost_inr})});
+   btn.textContent="✔ "+d.message;btn.classList.add("done");play(d.audio_b64,d.message);}catch(e){btn.disabled=false;toast(e.message);}}
+async function ask(blob){
+  const txt=$("askText").value.trim(),ph=$("photo").files[0];
+  if(!txt&&!(blob instanceof Blob)&&!ph){toast("Speak, type, or tap a picture first");$("askText").focus();return;}
+  const fd=new FormData();fd.append("plot_id",pid());fd.append("lang",LANG);if(txt)fd.append("text",txt);
+  if(blob instanceof Blob)fd.append("audio",blob,"voice.webm");if(ph)fd.append("photo",ph);
+  $("pTitle").textContent=T("ansT");$("pEar").style.display="none";
+  $("pBody").innerHTML=`<div class="bubble" style="border-left-color:var(--mut)">💬 ${esc(txt||"🎙️ …")}</div>`+thinking("🧠 "+T("thinking"));openPanel();
+  $("askOut").innerHTML=`<div class="bubble">${thinking("")}</div>`;
+  let d;try{d=await api("/api/ask",{method:"POST",body:fd});}catch(e){const m=`<div class="blk no">⚠️ ${esc(e.message)}</div>`;$("pBody").innerHTML=m;$("askOut").innerHTML=m;return;}
+  lastQ=d;const a=d.advice;const pr=PROBS.find(z=>z.key===a.problem);
+  $("pTitle").textContent=pr?(pr.names[LANG]||pr.names.en):T("ansT");$("pEar").style.display="block";
+  let h=`<div class="bubble" style="border-left-color:var(--mut)"><span class="muted">${d.was_voice?"🎙️":"💬"}</span> ${esc(d.question)}</div>
+   <div class="card"><div class="ansHead">${pr?`<img src="${pr.img}" alt="">`:""}<p class="say" style="margin:0">${esc(a.speak)}</p></div>
+   <button class="btn ghost sm" style="margin-top:10px;width:100%" onclick="play(lastQ.audio_b64,lastQ.advice.speak)">🔊 ${T("again")}</button></div>`;
+  if(d.photo_observation)h+=`<div class="blk maybe">📷 ${esc(d.photo_observation)}</div>`;
+  const dnu=[...(a.do_not_use||[]).map(x=>({...x,level:"danger"}))];
+  d.warnings.forEach(w=>{if(!dnu.find(x=>x.product===w.product))dnu.push(w);});
+  if(dnu.length)h+=`<div class="card"><h3><span class="t">⛔ ${T("dont")}</span></h3>${dnu.map(x=>`<div class="blk ${x.level==="warn"?"maybe":"no"}"><b>✖ ${esc(x.product)}</b><br>${esc(x.reason)}</div>`).join("")}
+   ${d.guard.avoid_same_moa.length?`<div class="muted">${T("sameGroup")}: ${esc(d.guard.avoid_same_moa.join(", "))}</div>`:""}</div>`;
+  if(a.recommend&&a.recommend.length)h+=`<div class="card"><h3><span class="t">✅ ${T("doThis")}</span></h3>${a.recommend.map((x,i)=>`<div class="blk yes"><span class="num">${i+1}</span><b>${esc(x.action)}</b> ${x.organic?`<span class="pill">🌿 ${T("natural")}</span>`:""}
+     <div class="muted" style="margin-top:4px">${esc(x.why)}${x.est_cost_inr?` · ~${rs(x.est_cost_inr)}`:""}</div>${(x.buy||[]).map(buyCard).join("")}
+     ${x.buy&&x.buy.length||x.product?`<button class="doBtn" onclick="adoptRec(${i},this)">👍 ${T("willDo")}</button>`:""}</div>`).join("")}
+     <div class="muted" style="font-size:11px">${T("priceNote")}</div></div>`;
+  if(a.guard_removed)h+=`<div class="blk maybe">🛡️ Memory guard removed ${a.guard_removed.length} AI suggestion(s) that already failed on this plot.</div>`;
+  if(d.weather)h+=`<div class="blk ${d.weather.ok_to_spray?"yes":"maybe"}">🌦️ ${esc(d.weather.advice)}</div>`;
+  h+=d.escalation?`<div class="blk maybe">👨‍🔬 ${T("sentExpert")}</div>`:`<button class="btn ghost sm" style="width:100%;margin-top:4px" onclick="askExpert()">👨‍🔬 ${T("notSure")}</button>`;
+  if(a.safety)h+=`<div class="muted" style="margin-top:8px">🧤 ${esc(a.safety)}</div>`;
+  h+=`<details><summary>🧠 ${d.memories_used.plot.length+d.memories_used.village.length} memories used · ${esc(a.mode)}</summary><b>This plot</b><ul>${d.memories_used.plot.map(m=>`<li>${esc(m)}</li>`).join("")}</ul><b>Village & elders</b><ul>${d.memories_used.village.map(m=>`<li>${esc(m)}</li>`).join("")}</ul></details>`;
+  $("pBody").innerHTML=h;$("pBody").scrollTop=0;openPanel();
+  $("askOut").innerHTML=`<div class="bubble"><div class="ansHead">${pr?`<img src="${pr.img}" alt="" style="width:44px;height:44px">`:""}<b>✅ ${T("ready")}</b><div style="margin-top:4px">${esc(a.speak.length>140?a.speak.slice(0,140)+"…":a.speak)}</div></div>
+    <button class="btn sm open" style="width:100%;margin-top:8px" onclick="openPanel()">📖 ${T("openAns")}</button></div>`;
+  play(d.audio_b64,a.speak);
+  $("askText").value="";$("photo").value="";$("photoName").textContent="";
+}
+async function askExpert(){const q=$("askText").value.trim()||(lastQ&&lastQ.question);if(!q){toast("Say or type your question first");return;}
+  try{await api("/api/escalate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({plot_id:pid(),question:q,lang:LANG,ai_answer:lastQ?lastQ.advice.english_summary:""})});toast("👨‍🔬 Sent to KVK expert");}catch(e){toast(e.message);}}
+
+// ---------- tell ----------
+async function logIt(blob){
+  const txt=$("logText").value.trim();if(!txt&&!(blob instanceof Blob)){toast("Speak or type what you did");return;}
+  const fd=new FormData();fd.append("plot_id",pid());fd.append("lang",LANG);if(txt)fd.append("text",txt);if(blob instanceof Blob)fd.append("audio",blob,"voice.webm");
+  $("logOut").innerHTML=thinking("Saving to memory…");
+  let d;try{d=await api("/api/log",{method:"POST",body:fd});}catch(e){$("logOut").innerHTML=`<div class="blk no">⚠️ ${esc(e.message)}</div>`;return;}
+  const e=d.event;
+  $("logOut").innerHTML=`<div class="card" style="margin-top:12px"><div class="muted">🎙️ “${esc(d.heard)}”</div><p class="say">✅ ${esc(d.confirm)}</p>
+   <table><tr><th>Type</th><td>${esc(e.type)}</td></tr><tr><th>Product</th><td>${esc(e.product||"-")}</td></tr><tr><th>For</th><td>${esc(e.target||"-")}</td></tr><tr><th>Cost</th><td>${e.cost?rs(e.cost):"-"}</td></tr><tr><th>Date</th><td>${esc(e.date)}</td></tr></table>
+   ${e.type==="treatment"?`<div class="muted" style="margin-top:6px">🔔 I'll ask you in 7 days if it worked.</div>`:""}</div>`;
+  play(d.audio_b64,d.confirm);$("logText").value="";}
+async function scanBill(inp){const f=inp.files[0];if(!f)return;const fd=new FormData();fd.append("plot_id",pid());fd.append("lang",LANG);fd.append("photo",f);
+  $("logOut").innerHTML=thinking("Reading the bill…");
+  try{const d=await api("/api/scan-bill",{method:"POST",body:fd});
+    $("logOut").innerHTML=`<div class="card" style="margin-top:12px"><b>✅ ${esc(d.message)}</b>${d.shop?`<div class="muted">${esc(d.shop)}</div>`:""}<table>${d.saved.map(e=>`<tr><td>${esc(e.date)}</td><td>${esc(e.product)}</td><td>${e.cost?rs(e.cost):""}</td></tr>`).join("")}</table></div>`;play(d.audio_b64);}
+  catch(e){$("logOut").innerHTML=`<div class="blk no">⚠️ ${esc(e.message)}</div>`;}inp.value="";}
+
+// ---------- my farm ----------
+async function loadChart(){
+  $("t-chart").innerHTML=thinking("");
+  let d;try{d=await api("/api/plots/"+pid());}catch(e){$("t-chart").innerHTML=`<div class="blk no">${esc(e.message)}</div>`;return;}const L=d.ledger,p=d.plot;
+  let h=`<div class="card"><div class="cropHead"><img src="/static/img/${p.crop_key||"cotton"}.svg" alt=""><div style="flex:1"><b style="font-size:18px">${esc(p.farmer)}</b><div class="muted">${esc(p.id)} · ${esc(p.crop)} · ${p.area_acres} acres</div><div class="muted">${esc(p.village)}, ${esc(p.district)}</div></div></div>
+   <div class="grid2" style="margin-top:12px;grid-template-columns:repeat(3,1fr)"><div class="kpi"><b style="font-size:18px">${rs(L.total_spent)}</b><span>spent</span></div><div class="kpi r"><b style="font-size:18px">${rs(L.wasted_on_failures)}</b><span>wasted</span></div><div class="kpi g"><b style="font-size:18px">${rs(L.saved_by_memory)}</b><span>saved</span></div></div>
+   <a class="btn ghost sm" style="display:block;text-align:center;text-decoration:none;margin-top:10px" href="/passport/${p.id}" target="_blank">📄 Plot passport (print / PDF)</a></div>`;
+  if(d.guard.avoid.length||d.guard.proven.length)h+=`<div class="card"><h3><span class="t">⚕️ Medical chart</span></h3>${d.guard.avoid.map(a=>`<div class="blk no">✖ <b>${esc(a.product)}</b> · failed ${a.count}× · ${esc(a.moa||"")}</div>`).join("")}${d.guard.proven.map(a=>`<div class="blk yes">✔ <b>${esc(a.product)}</b> · worked, ${a.best_days} healthy days</div>`).join("")}</div>`;
+  h+=`<div class="card"><h3><span class="t">🗣️ Season report</span><button class="btn ghost sm" onclick="report()">▶ Play</button></h3><div id="repOut" class="muted">A spoken summary of everything this plot remembers.</div></div>
+   <div class="card"><h3><span class="t">🕰️ History (${d.timeline.length})</span></h3><div class="tl">`+
+   d.timeline.map(e=>`<div class="it ${e.outcome||""}"><b>${esc(e.date)}</b> · ${esc(e.type.replace("_"," "))} ${e.outcome?`<span class="pill ${e.outcome==="failed"?"r":e.outcome==="pending"?"y":""}">${esc(e.outcome)}</span>`:""} ${e.source&&e.source!=="seed"?`<span class="pill b">${esc(e.source)}</span>`:""}<br>${esc(e.product||"")}${e.target?" → "+esc(e.target):""}${e.cost?" · "+rs(e.cost):""}${e.days_healthy?` · ${e.days_healthy} healthy days`:""}<div class="muted">${esc(e.notes||"")}</div></div>`).join("")+`</div></div>`;
+  $("t-chart").innerHTML=h;}
+async function report(){$("repOut").innerHTML=thinking("Thinking over the whole history…");
+  try{const d=await api(`/api/plots/${pid()}/report?lang=${LANG}`);$("repOut").innerHTML=`<div class="blk yes" style="color:var(--ink)">${esc(d.report)}</div>`;play(d.audio_b64,d.report);}catch(e){$("repOut").innerHTML=`<div class="blk no">${esc(e.message)}</div>`;}}
+
+// ---------- more ----------
+function loadMore(){
+  $("t-more").innerHTML=`<div class="tiles">
+   <button onclick="village()"><span class="i">🏘️</span>Village</button>
+   <button onclick="prices()"><span class="i">📈</span>Mandi prices</button>
+   <button onclick="schemes()"><span class="i">🏛️</span>Schemes</button>
+   <button onclick="elders()"><span class="i">👴</span>Elder wisdom</button>
+   <button onclick="window.open('/passport/'+pid())"><span class="i">📄</span>Plot passport</button>
+   <button onclick="newPlot()"><span class="i">➕</span>New farmer</button>
+   <button onclick="openLang()"><span class="i">🌐</span>Language</button>
+   <button onclick="window.open('/agent')"><span class="i">🧑‍💼</span>Field agent</button></div>`;}
+const back=`<button class="back" onclick="loadMore()">← Back</button>`;
+async function village(){const d=await api("/api/village/"+encodeURIComponent(plot().village));
+  $("t-more").innerHTML=back+`${d.outbreaks.map(o=>`<div class="card alert"><b>⚠️ ${esc(o.pest)}</b> on ${o.count} farms in the last ${o.days} days</div>`).join("")}
+  <div class="card"><h3><span class="t">🏘️ What worked in ${esc(d.village)}</span><span class="pill">${d.farmers} farmers</span></h3><div class="muted">Anonymous results from every plot in the village</div>
+  <table><tr><th>Problem</th><th>Treatment</th><th>👍</th><th>👎</th></tr>${d.treatments.map(r=>`<tr><td>${esc(r.problem)}</td><td>${esc(r.product)}<div class="muted" style="font-size:11px">${esc(r.moa||"")}</div></td><td>${r.worked||""}</td><td style="color:var(--r)">${r.failed||""}</td></tr>`).join("")}</table></div>`;}
+async function prices(){const m=HOME.market,p=plot();
+  $("t-more").innerHTML=back+`<div class="card"><div class="cropHead"><img src="/static/img/${p.crop_key||"cotton"}.svg" alt=""><div><b style="font-size:26px">${rs(m.today)}</b> <span class="muted">/ quintal today</span><div class="muted">${esc(p.crop)}</div></div></div>${m.series.length?spark(m.series,m.msp):""}
+  ${m.msp?`<div class="muted">Dashed line: MSP ${rs(m.msp[0])} (${esc(m.msp[1])})</div>`:""}
+  <table style="margin-top:8px"><tr><th>Market</th><th>Modal price</th></tr>${m.markets.map(x=>`<tr><td>${esc(x.market)}</td><td>${rs(x.modal)}</td></tr>`).join("")}</table><div class="muted" style="margin-top:6px;font-size:11px">${esc(m.source)}</div></div>`;}
+async function schemes(){const d=await api("/api/schemes");
+  $("t-more").innerHTML=back+d.map(s=>`<div class="card"><h3><span class="t">${s.icon} ${esc(s.name)}</span>${ear(`${s.name}. ${s.what} ${s.who}`)}</h3><div>${esc(s.what)}</div><div class="muted" style="margin-top:6px">👤 ${esc(s.who)}</div><div class="muted">📍 ${esc(s.where)}</div></div>`).join("")+`<div class="muted">Scheme rules change. Confirm at the agriculture office before applying.</div>`;}
+async function elders(){const d=await api("/api/village/"+encodeURIComponent(plot().village));
+  $("t-more").innerHTML=back+`<div class="card"><h3><span class="t">👴 Record an elder's tip</span></h3><div class="muted">Old farming wisdom is saved to the village memory and marked "not verified" until the KVK checks it.</div>
+   <input class="f" id="elderName" placeholder="Elder's name" style="margin-top:8px"><div class="inrow"><input id="elderText" placeholder="Type or dictate the tip"><button class="btn" onclick="saveElder()">➤</button></div></div>`+
+   d.elder_knowledge.map(e=>`<div class="card"><h3><span class="t">${e.verified?'<span class="pill">✔ verified by KVK</span>':'<span class="pill y">not verified</span>'}</span>${ear(e.text)}</h3>“${esc(e.text)}”<div class="muted">— ${esc(e.elder)}</div></div>`).join("");}
+async function saveElder(){const fd=new FormData();fd.append("village",plot().village);fd.append("elder_name",$("elderName").value||"Elder");fd.append("lang",LANG);fd.append("text",$("elderText").value);
+  try{await api("/api/elder",{method:"POST",body:fd});toast("Saved to village memory");elders();}catch(e){toast(e.message);}}
+function newPlot(){$("t-more").innerHTML=back+`<div class="card"><h3><span class="t">➕ Register a farmer</span></h3>
+  <input class="f" id="np_id" placeholder="Plot ID e.g. PLOT-50"><input class="f" id="np_f" placeholder="Farmer name"><input class="f" id="np_v" placeholder="Village"><input class="f" id="np_d" placeholder="District">
+  <input class="f" id="np_s" placeholder="State"><select class="f" id="np_c"><option value="cotton">Cotton</option><option value="chilli">Chilli</option><option value="paddy">Paddy</option><option value="wheat">Wheat</option><option value="groundnut">Groundnut</option></select>
+  <input class="f" id="np_a" type="number" step="0.1" placeholder="Acres"><label class="muted">Sowing date</label><input class="f" id="np_sown" type="date"><input class="f" id="np_ph" placeholder="WhatsApp number +91…">
+  <button class="btn" style="width:100%" onclick="savePlot()">Save</button></div>`;}
+async function savePlot(){const v=id=>$(id).value.trim();const c=$("np_c");
+  try{await api("/api/plots",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:v("np_id"),farmer:v("np_f"),village:v("np_v"),district:v("np_d"),state:v("np_s"),
+   crop:c.options[c.selectedIndex].text+" (Kharif 2026)",crop_key:c.value,area_acres:parseFloat(v("np_a"))||1,sown:v("np_sown")||null,phone:v("np_ph"),lang:LANG})});
+   toast("Farmer registered");PLOTS=await api("/api/plots");$("plot").innerHTML=PLOTS.map(p=>`<option value="${p.id}">${esc(p.farmer)} · ${esc(p.village)}</option>`).join("");$("plot").value=v("np_id").toUpperCase();switchPlot();}
+  catch(e){toast(e.message);}}
+if(window.speechSynthesis)speechSynthesis.onvoiceschanged=()=>{};
+init().catch(e=>{document.getElementById("t-home").innerHTML=`<div class="blk no">⚠️ ${esc(e.message)}</div>`;});
+</script>
+</body>
+</html>
